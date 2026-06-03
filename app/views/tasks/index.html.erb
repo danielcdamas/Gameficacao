@@ -1,0 +1,63 @@
+<% content_for :title, "Tarefas — Gameficação" %>
+
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <!-- Header -->
+  <div class="flex items-center justify-between mb-6">
+    <div>
+      <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Suas Missões</h1>
+      <%= render "tasks/counts", pending: @pending_count, completed: @completed_count %>
+    </div>
+  </div>
+
+  <!-- New task form -->
+  <div class="rounded-2xl border shadow-sm p-5 mb-6
+              bg-white border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+    <h2 class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3 flex items-center gap-2">
+      ➕ Nova Missão
+    </h2>
+    <%= render "tasks/form", task: @task || Task.new %>
+  </div>
+
+  <!-- Filters -->
+  <div class="flex flex-wrap gap-2 mb-4">
+    <%= link_to "Todas", tasks_path,
+        class: "px-3 py-1.5 text-sm rounded-lg font-medium transition-colors
+                #{ params[:status].blank? && params[:difficulty].blank? ?
+                   'bg-purple-600 text-white' :
+                   'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800' }" %>
+    <%= link_to "Pendentes", tasks_path(status: "pending"),
+        class: "px-3 py-1.5 text-sm rounded-lg font-medium transition-colors
+                #{ params[:status] == 'pending' ?
+                   'bg-yellow-500 text-white' :
+                   'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800' }" %>
+    <%= link_to "Concluídas", tasks_path(status: "completed"),
+        class: "px-3 py-1.5 text-sm rounded-lg font-medium transition-colors
+                #{ params[:status] == 'completed' ?
+                   'bg-green-500 text-white' :
+                   'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800' }" %>
+    <span class="text-gray-300 dark:text-gray-600 self-center">|</span>
+    <% Task::DIFFICULTIES.each do |key, info| %>
+      <%= link_to "#{info[:emoji]} #{info[:label]}", tasks_path(difficulty: key),
+          class: "px-3 py-1.5 text-sm rounded-lg font-medium transition-colors
+                  #{ params[:difficulty] == key ?
+                     "bg-#{info[:color]}-500 text-white" :
+                     'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800' }" %>
+    <% end %>
+  </div>
+
+  <!-- Tasks list -->
+  <div id="tasks-list" class="space-y-2">
+    <% if @tasks.empty? %>
+      <div class="text-center py-16 rounded-2xl border border-dashed
+                  border-gray-300 dark:border-gray-700">
+        <span class="text-5xl block mb-3">🗡️</span>
+        <p class="text-gray-500 dark:text-gray-400 font-medium">Nenhuma missão encontrada</p>
+        <p class="text-gray-400 dark:text-gray-500 text-sm mt-1">Adicione sua primeira tarefa acima!</p>
+      </div>
+    <% else %>
+      <% @tasks.each do |task| %>
+        <%= render "tasks/task", task: task %>
+      <% end %>
+    <% end %>
+  </div>
+</div>

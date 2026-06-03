@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="<%= @theme || 'dark' %>" data-color="<%= @color_theme || 'purple' %>" class="<%= @theme == 'light' ? '' : 'dark' %>">
+  <head>
+    <title><%= content_for(:title) || "Gameficação" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="Gameficação">
+    <meta name="mobile-web-app-capable" content="yes">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <link rel="icon" href="/icon.png" type="image/png">
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body class="min-h-screen transition-colors duration-300" data-controller="theme">
+    <% if authenticated? %>
+      <%= render "shared/navbar" %>
+    <% end %>
+
+    <div id="xp-notification"></div>
+
+    <% if notice %>
+      <div id="flash-notice" data-controller="flash"
+           class="fixed top-20 right-4 z-50 px-6 py-3 rounded-xl shadow-lg font-medium
+                  bg-green-500 text-white animate-slide-in" role="alert">
+        <%= notice %>
+      </div>
+    <% end %>
+    <% if alert %>
+      <div id="flash-alert" data-controller="flash"
+           class="fixed top-20 right-4 z-50 px-6 py-3 rounded-xl shadow-lg font-medium
+                  bg-red-500 text-white animate-slide-in" role="alert">
+        <%= alert %>
+      </div>
+    <% end %>
+
+    <main class="<%= authenticated? ? 'pt-20' : '' %> min-h-screen">
+      <%= yield %>
+    </main>
+  </body>
+</html>
