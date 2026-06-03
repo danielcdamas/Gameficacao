@@ -45,11 +45,11 @@ class User < ApplicationRecord
     current_xp = xp - xp_for_current_level
     needed_xp = xp_for_next_level - xp_for_current_level
     return 100 if needed_xp <= 0
-    [(current_xp.to_f / needed_xp * 100).round, 100].min
+    [ (current_xp.to_f / needed_xp * 100).round, 100 ].min
   end
 
   def xp_to_next_level
-    [xp_for_next_level - xp, 0].max
+    [ xp_for_next_level - xp, 0 ].max
   end
 
   def add_xp!(amount)

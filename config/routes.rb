@@ -9,13 +9,13 @@ Rails.application.routes.draw do
   get    "register", to: "users#new",        as: :register
   post   "register", to: "users#create"
 
-  resource :profile, only: [:edit, :update], controller: "users"
+  resource :profile, only: [ :edit, :update ], controller: "users"
 
   resources :tasks do
     member { patch :complete }
   end
 
-  resources :achievements, only: [:index]
+  resources :achievements, only: [ :index ]
 
   patch "theme", to: "themes#update", as: :theme
 end
