@@ -1,0 +1,15 @@
+<% if local_assigns[:xp] && xp > 0 %>
+  <div data-controller="xp-notification"
+       data-xp-notification-leveled-up-value="<%= leveled_up %>"
+       class="fixed bottom-8 right-8 z-50 pointer-events-none">
+    <div class="xp-popup flex flex-col items-center gap-1 px-6 py-4 rounded-2xl shadow-2xl
+                bg-gradient-to-br from-purple-600 to-pink-600 text-white font-bold
+                animate-bounce-in">
+      <span class="text-3xl"><%= leveled_up ? "🎉" : "⚡" %></span>
+      <span class="text-2xl">+<%= xp %> XP!</span>
+      <% if leveled_up %>
+        <span class="text-sm opacity-90">Subiu para Nível <%= level %>!</span>
+      <% end %>
+    </div>
+  </div>
+<% end %>

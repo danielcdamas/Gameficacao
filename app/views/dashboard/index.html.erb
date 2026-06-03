@@ -1,0 +1,176 @@
+<% content_for :title, "Dashboard — Gameficação" %>
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <!-- Hero / Stats Row -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+    <!-- Player Card -->
+    <div class="lg:col-span-1">
+      <div class="rounded-2xl p-6 border shadow-sm
+                  bg-white border-gray-200
+                  dark:bg-gray-800 dark:border-gray-700">
+        <div class="flex items-start justify-between mb-4">
+          <div class="flex items-center gap-3">
+            <div class="w-14 h-14 rounded-full bg-gradient-to-br from-purple-500 to-pink-500
+                        flex items-center justify-center text-white text-2xl font-bold shadow-lg">
+              <%= @user.name.first.upcase %>
+            </div>
+            <div>
+              <h2 class="font-bold text-gray-900 dark:text-white"><%= @user.name %></h2>
+              <p class="text-sm text-purple-600 dark:text-purple-400 font-medium"><%= @user.title %></p>
+            </div>
+          </div>
+          <div class="text-right">
+            <div class="text-2xl font-bold text-gray-900 dark:text-white">Nv. <%= @user.level %></div>
+            <div class="text-xs text-gray-500 dark:text-gray-400"><%= @user.xp %> XP total</div>
+          </div>
+        </div>
+
+        <!-- XP Progress Bar -->
+        <div class="mb-2">
+          <div class="flex justify-between text-xs text-gray-500 dark:text-gray-400 mb-1">
+            <span>Progresso para Nv. <%= @user.level + 1 %></span>
+            <span><%= @user.xp_progress_percent %>%</span>
+          </div>
+          <div class="h-3 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+            <div class="h-full rounded-full bg-gradient-to-r from-purple-500 to-pink-500 transition-all duration-700"
+                 style="width: <%= @user.xp_progress_percent %>%"></div>
+          </div>
+          <div class="flex justify-between text-xs text-gray-400 dark:text-gray-500 mt-1">
+            <span><%= @user.xp %> XP</span>
+            <span>Faltam <%= @user.xp_to_next_level %> XP</span>
+          </div>
+        </div>
+
+        <!-- Streak -->
+        <div class="mt-4 flex items-center justify-between p-3 rounded-xl
+                    bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800">
+          <div class="flex items-center gap-2">
+            <span class="text-2xl">🔥</span>
+            <div>
+              <div class="font-bold text-orange-700 dark:text-orange-400"><%= @user.streak_days %> dias seguidos</div>
+              <div class="text-xs text-orange-600 dark:text-orange-500">Sequência ativa</div>
+            </div>
+          </div>
+          <div class="text-3xl font-black text-orange-500 opacity-30"><%= @user.streak_days %></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="lg:col-span-2 grid grid-cols-2 sm:grid-cols-4 gap-4 content-start">
+      <div class="rounded-2xl p-5 border shadow-sm col-span-2 sm:col-span-2
+                  bg-white border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+        <div class="flex items-center gap-3 mb-2">
+          <span class="text-3xl">📋</span>
+          <div>
+            <div class="text-3xl font-black text-gray-900 dark:text-white"><%= @stats[:total_tasks] %></div>
+            <div class="text-sm text-gray-500 dark:text-gray-400">Total de Tarefas</div>
+          </div>
+        </div>
+        <div class="h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+          <% pct = @stats[:total_tasks] > 0 ? (@stats[:completed_tasks].to_f / @stats[:total_tasks] * 100).round : 0 %>
+          <div class="h-full bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full"
+               style="width: <%= pct %>%"></div>
+        </div>
+        <p class="text-xs text-gray-400 dark:text-gray-500 mt-1"><%= pct %>% concluídas</p>
+      </div>
+
+      <div class="rounded-2xl p-5 border shadow-sm
+                  bg-white border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+        <span class="text-2xl block mb-1">✅</span>
+        <div class="text-2xl font-black text-green-600 dark:text-green-400"><%= @stats[:completed_tasks] %></div>
+        <div class="text-xs text-gray-500 dark:text-gray-400">Concluídas</div>
+      </div>
+
+      <div class="rounded-2xl p-5 border shadow-sm
+                  bg-white border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+        <span class="text-2xl block mb-1">⏳</span>
+        <div class="text-2xl font-black text-yellow-600 dark:text-yellow-400"><%= @stats[:pending_tasks] %></div>
+        <div class="text-xs text-gray-500 dark:text-gray-400">Pendentes</div>
+      </div>
+
+      <div class="rounded-2xl p-5 border shadow-sm col-span-2
+                  bg-white border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+        <div class="flex items-center justify-between">
+          <div>
+            <span class="text-2xl block mb-1">☀️</span>
+            <div class="text-2xl font-black text-purple-600 dark:text-purple-400"><%= @completed_today %> tarefas</div>
+            <div class="text-xs text-gray-500 dark:text-gray-400">Hoje — +<%= @total_xp_today %> XP</div>
+          </div>
+          <div class="text-6xl font-black text-gray-100 dark:text-gray-700 select-none"><%= @completed_today %></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- Pending Tasks -->
+    <div class="rounded-2xl border shadow-sm bg-white border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+      <div class="flex items-center justify-between p-6 border-b border-gray-100 dark:border-gray-700">
+        <h3 class="font-bold text-gray-900 dark:text-white flex items-center gap-2">
+          <span>⏳</span> Próximas Tarefas
+        </h3>
+        <%= link_to "Ver todas →", tasks_path,
+            class: "text-sm text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 font-medium" %>
+      </div>
+      <div class="p-4 space-y-3">
+        <% if @pending_tasks.empty? %>
+          <div class="text-center py-8">
+            <span class="text-4xl block mb-2">🎉</span>
+            <p class="text-gray-500 dark:text-gray-400 text-sm">Nenhuma tarefa pendente!</p>
+            <%= link_to "Criar nova tarefa", new_task_path,
+                class: "mt-2 inline-block text-sm text-purple-600 dark:text-purple-400 font-medium hover:underline" %>
+          </div>
+        <% else %>
+          <% @pending_tasks.each do |task| %>
+            <div class="flex items-center gap-3 p-3 rounded-xl
+                        bg-gray-50 dark:bg-gray-900/50 hover:bg-gray-100 dark:hover:bg-gray-900 transition-colors">
+              <span class="text-lg"><%= task.difficulty_emoji %></span>
+              <div class="flex-1 min-w-0">
+                <p class="font-medium text-gray-900 dark:text-white truncate"><%= task.title %></p>
+                <p class="text-xs text-gray-500 dark:text-gray-400"><%= task.difficulty_label %> • +<%= task.xp_reward %> XP</p>
+              </div>
+              <%= button_to complete_task_path(task), method: :patch,
+                  class: "text-xs px-3 py-1.5 rounded-lg font-medium transition-colors
+                          bg-green-100 text-green-700 hover:bg-green-200
+                          dark:bg-green-900/30 dark:text-green-400 dark:hover:bg-green-900/50" do %>
+                ✓ Feito
+              <% end %>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Recent Achievements -->
+    <div class="rounded-2xl border shadow-sm bg-white border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+      <div class="flex items-center justify-between p-6 border-b border-gray-100 dark:border-gray-700">
+        <h3 class="font-bold text-gray-900 dark:text-white flex items-center gap-2">
+          <span>🏆</span> Conquistas Recentes
+        </h3>
+        <%= link_to "Ver todas →", achievements_path,
+            class: "text-sm text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 font-medium" %>
+      </div>
+      <div class="p-4 space-y-3">
+        <% if @recent_achievements.empty? %>
+          <div class="text-center py-8">
+            <span class="text-4xl block mb-2">🎯</span>
+            <p class="text-gray-500 dark:text-gray-400 text-sm">Complete tarefas para ganhar conquistas!</p>
+          </div>
+        <% else %>
+          <% @recent_achievements.each do |ua| %>
+            <div class="flex items-center gap-3 p-3 rounded-xl
+                        bg-purple-50 dark:bg-purple-900/20 border border-purple-100 dark:border-purple-800">
+              <span class="text-3xl"><%= ua.achievement.icon %></span>
+              <div class="flex-1">
+                <p class="font-semibold text-gray-900 dark:text-white"><%= ua.achievement.name %></p>
+                <p class="text-xs text-gray-500 dark:text-gray-400"><%= ua.achievement.description %></p>
+              </div>
+              <span class="text-xs font-bold text-purple-600 dark:text-purple-400">+<%= ua.achievement.xp_bonus %> XP</span>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
